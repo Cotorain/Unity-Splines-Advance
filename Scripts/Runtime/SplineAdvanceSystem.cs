@@ -105,4 +105,24 @@ public static class SplineAdvanceSystem
         calcPos = originPos + nearestPointPos * offset;
         calcRot = nearestRotOnSpline;
     }
+    /// <summary>
+    /// distanceで指定したSpline上の位置から、その位置に対応する‰(勾配)値を出力します。
+    /// </summary>
+    /// <param name="spline">勾配を取得したいSplineを指定します。</param>
+    /// <param name="distance">勾配を取得したいSpline上の位置をUnitで入力します</param>
+    /// <param name="parmill">勾配を‰(パーミル)で返します。</param>
+    public static void GetIncrineParmill(SplineContainer spline, float distance, out float parmill)
+    {
+        if (spline == null)
+        {
+            Debug.LogError("SplineContainer is null. Cannot calculate offset on spline.");
+            distance = 0f;
+            parmill = 0f;
+            return;
+        }
+        CalcSpline(spline, distance, out Vector3 originPos, out Vector3 originRot);
+        CalcSpline(spline, distance + 0.001f, out Vector3 nextPos, out Vector3 nextRot);
+        float heightDiff = nextPos.y - originPos.y;
+        parmill = heightDiff * 1000000f;//‰を求めるために0.001unit精度では1000000倍する。
+    }
 }

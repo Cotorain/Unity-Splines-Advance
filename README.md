@@ -1,4 +1,4 @@
-# Unity Spline Advance v1.0
+# Unity Spline Advance v1.1.0
 ## 初めに - Unity Spline Advanceについて
 Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された、API及び拡張機能が同梱されたシステムです。Unity C#コードにおいて、ユーザーは、API（void）をスクリプトから使用することができます。
 
@@ -17,6 +17,8 @@ Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された�
 - READMEです。このファイルです。
 ### LICENSE
 - MIT Licenseです。
+### CHANGELOG
+- パッケージのバージョン情報などの変更履歴(Change Log)です。
 
 ## インストール方法
 このファイルをGitHubの`Code`→`Download ZIP`よりインストールし、解凍して`Assets`フォルダーもしくは`Packages`フォルダーに貼り付けてください。
@@ -70,6 +72,18 @@ Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された�
 - 求められる位置は**あくまで近似点であり、実際の正確な値を保証するわけではありません**。
 - 複雑な形のSplineでは、**大きくずれることがあります**。
 - `Calcspline()`の仕様により、二点のうちどちらかがSplineの範囲外になると、開Splineの場合は挙動に不具合が生じます。
+
+----
+### `GetIncrineParmill(SplineContainer spline, float distance, out float parmill)`
+- 指定されたSpline上の点の勾配をパーミル(‰)で返すAPIです。
+- 高低差は、0.001unit(=1mUnit)の精度で計算します。
+### 各値について
+- `SplineContainer spline`  
+  計算の元となるSplineを指定します。
+- `float distance`  
+  Spline上の位置(`Knot[0]`からの距離)をUnity Unitで指定します。
+- `out float parmill`  
+  勾配をパーミル(‰)で返します。
 
 ----
 

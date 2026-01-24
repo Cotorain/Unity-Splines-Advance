@@ -1,6 +1,6 @@
 {
-  "name": "com.cotorain.unity-splines-advance",
-  "version": "1.0.0",
+  "name": "unity-splines-advance",
+  "version": "1.1.0",
   "displayName": "Unity Splines Advance",
   "description": "API and features extending the functionality of Unity Splines package.",
   "unity": "6000.3",
@@ -22,6 +22,7 @@
   "files": [
     "Scripts",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG"
   ]
 }
