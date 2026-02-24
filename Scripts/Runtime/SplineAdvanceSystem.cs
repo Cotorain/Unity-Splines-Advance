@@ -52,8 +52,22 @@ public static class SplineAdvanceSystem
 
         calcPos = (Vector3)pos;
 
-        Quaternion quat = Quaternion.LookRotation((Vector3)math.normalize(tangent), (Vector3)up);
-        calcRot = quat.eulerAngles;
+        // tangentがゼロベクトルの場合は、デフォルト回転を使用
+        float tangentLength = math.length(tangent);
+        float upLength = math.length(up);
+
+        if (tangentLength < 0.0001f || upLength < 0.0001f)
+        {
+            // 接線またはup方向が無効な場合は、デフォルト回転を返す
+            calcRot = Vector3.zero; // または Quaternion.identity.eulerAngles
+        }
+        else
+        {
+            float3 normalizedTangent = tangent / tangentLength;
+            float3 normalizedUp = up / upLength;
+            Quaternion quat = Quaternion.LookRotation((Vector3)normalizedTangent, (Vector3)normalizedUp);
+            calcRot = quat.eulerAngles;
+        }
     }
 
     /// <summary>
@@ -77,9 +91,8 @@ public static class SplineAdvanceSystem
     }
 
     /// <summary>
-    /// distanceで指定したSpline上の位置から、offsetで指定した位置へのオフセット位置を計算し、近似点Transformの位置と回転を出力します。
-    /// 注意：offsetで指定した座標はあくまで近似点であり、実際にdistance上の点から直線にoffsetの分だけ離したSpline上の位置ではありません。
-    /// 近似点の計算方法：distanceとoffset(distance + offset)でそれぞれSpline上の位置を計算し、その2点を結ぶベクトル方向にdistanceを基準としてoffset分だけ離した点を近似点としています。
+    /// distanceで指定したSpline上の位置から、offsetで指定した位置へのオフセット位置を計算し、近似点のTransformの位置と回転を出力します。
+    /// 近似点の計算方法：distanceとoffset(distance + offset)でそれぞれSpline上の位置を計算し、その2点を結ぶベクトル方向にdistanceを基準としてoffsetの絶対値分だけ離した点を近似点としています。
     /// その際、回転はoffsetで指定した位置のSpline上の回転をそのまま使用します。
     /// offsetの値が0の時の処理も考えましたが、(distance + Offset)の時点でdistanceの位置と同じになるため、特別な処理は行いません。
     /// </summary>
@@ -100,9 +113,16 @@ public static class SplineAdvanceSystem
         CalcSpline(spline, distance, out Vector3 originPos, out Vector3 originRot);
         CalcSpline(spline, distance + offset, out Vector3 nearestPosOnSpline, out Vector3 nearestRotOnSpline);
 
-        Vector3 nearestPointPos = (nearestPosOnSpline - originPos).normalized;
+        Vector3 nearestPointPos = nearestPosOnSpline - originPos;
         // distance から offset 分だけ離れた点を近似点とする
-        calcPos = originPos + nearestPointPos * offset;
+        if (nearestPointPos.magnitude > 0)
+        {
+            calcPos = originPos + nearestPointPos.normalized * Mathf.Abs(offset);
+        }
+        else
+        {
+            calcPos = originPos;
+        }
         calcRot = nearestRotOnSpline;
     }
     /// <summary>

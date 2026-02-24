@@ -1,12 +1,12 @@
 {
   "name": "unity-splines-advance",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "displayName": "Unity Splines Advance",
   "description": "API and features extending the functionality of Unity Splines package.",
   "unity": "6000.3",
   "splines": "2.8.2",
   "author": {
-    "name": "Cotoráin",
+    "name": "Cotor\u00e1in",
     "url": "https://github.com/Cotorain"
   },
   "repository": {

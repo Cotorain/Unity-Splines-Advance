@@ -13,6 +13,12 @@ Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された�
 ### SplineAdvanceInstantiate.cs
 - オブジェクトの配置を拡張した機能です。**インスペクター上に追加して使用します**。
 - メッシュ変形などの機能が含まれています。
+### SplineGuide.cs
+- Spline上の設置ガイドです。**インスペクター上に追加して使用します**。
+- 指定したSplineの長さや位置毎の座標などを計測することができます。
+### RouteManager.cs
+- Splineの移動を拡張するコードです。**インスペクター上に追加して使用しますが、スクリプトからも扱います**。
+- 分岐やワールドサイズ最適化などに応用できます。
 ### README.md
 - READMEです。このファイルです。
 ### LICENSE
@@ -105,7 +111,7 @@ Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された�
 - Prefab  
   Instantiateを適応するオブジェクトのPrefabです。
 - Mesh Deform  
-  メッシュ変形を行うかどうかを選択します。（現在はβ版です。）
+  メッシュ変形を行うかどうかを選択します。（実行中はEditor上で何も操作できなくなるため、高ポリのオブジェクトへの適用には注意してください。）
 - Installation Interval  
   オブジェクトを設置する間隔です。**Unity Unitで設定します**。
 - Transform Correction  
@@ -121,15 +127,59 @@ Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された�
 - Forward Axis  
   オブジェクトの前方系です。Object Y+はサポートしていません。
 
+## SplineGuideの使用方法
+コンポーネントを使用したオブジェクト自身を、Editモード上でもSpline上で動かすことができるスクリプトです。座標などのメモや後述のRouteManagerのテストにお使いください。
+### 使用方法
+1. Spline ContainerがアタッチされたGameObjectにアタッチします。
+2. 各値（後述）を設定します。
+### 各値について
+- Spline  
+  移動したいSplineを指定します。`IsFork`がFalseの時のみ有効です。
+- Distance  
+　Spline上の位置を指定します。
+- SplineLength  
+  Splineの長さを表示します。`IsFork`がFalseの時は、`Spline`にアタッチされているSplineコンテナにあるSplineの長さを、そうでない時はRouteManagerで設定したルートを設定します。
+- IsFork  
+  RouteManagerを使用するか指定します。
+- RouteManager  
+  RouteManagerを使用する場合は、適応したいRouteManagerをドラッグもしくはプルダウン選択してください。
+
+## RouteManagerの使用方法
+Splineの移動経路を設定し、始点のSplineからの距離の座標や回転を取得できます。取得方法は後述します。複数のSplineを次々と移動したり、分岐点を設定することができます。
+### 各値について
+- Recalculate Route  
+  値の更新時に再計算を手動で行います。変更後は必ず押すようにしてください。前回のものが適応されたままの場合はここを押してください。
+--JointInfo--
+- Spline  
+  経路として組み込みたいSplineを指定します。
+- Start  
+  `Spline`にて指定した経路の始点を入力します。
+- End  
+  `Spline`にて指定した経路の終点を入力します。
+### 利用できる値について
+値を利用するには、APIとは別の方法が必要になります。特定のRouteManagerの値を利用できる代わりに、ユーザーは個別で利用したいRouteManagerを指定する必要があります。例えば、以下のような記述をして、RouteManagerを指定してください。  
+分岐点を作成したい場合、`SplineGuide`を使用して分岐を開始したい地点の座標と回転をコピーし、その点からSplineの編集画面にてその値を入力し、分岐をがたつきなく作成することができます。この方法は少し特殊ですが、分岐点だけでなくワールドスケールの最適化など、様々な使用方法と拡張性を期待できます。
+```
+public RouteManager routeManager;
+```
+なお、値の説明には、値にアクセスするために`routeManager.`を使用するものとします。
+- `routeManager.distance = `  
+  RouteManagerでは、複数のSplineを一本のように扱うイメージです。distanceは、`element[0]`に入力したSplineのStart値を起点として指定してください。
+- `routeManager.calcPos`&`routeManager.calcRot`  
+  distanceで指定したSpline上の位置や回転を取得できます。**この値は`Vector3`です。利用者側からは改変できません。**
+- `routeManager.SplineLength`  
+  Editor上で設定したSplineの合同全長を計測して利用できます。**この値は利用者側から改変できません。**
+
+
 ## 免責事項
 1. このスクリプトは**AIを使って作成しました**。特に、MeshDeformについては私の能力不足でAIのみを使っていて、自力で修正をしていません。ただし、動作確認は十分に行いました。
 
 2. 商用利用はMIT Licenseの通りですが、**商用利用する際や重要なプロジェクトに使用する場合は十分に検証をしてください**。
 
-3. `SplineAdvanceSystem.GetOffsetOnSpline`について再度注意しますが、**求められる位置はあくまで近似点であり、実際の正確な値を保証するわけではありません。
+3. `SplineAdvanceSystem.GetOffsetOnSpline`について再度注意しますが、**求められる位置はあくまで近似点であり、実際の正確な値を保証するわけではありません。**
 複雑な形のSplineでは、大きくずれることがあります**。
 
-4. メッシュ変形機能(Mesh Deform)は現時点ではβ版であり、複雑なオブジェクトなどでは不具合が生じる可能性があります。
+4. メッシュ変形機能(Mesh Deform)は実行すると、完了するまで何も操作できなくなるため、高ポリのオブジェクトなど負荷のかかるオブジェクトを複製する場合は十分注意してください。
 
 ## ご連絡
 何かお問い合わせがある場合は、作者(Cotoráin)のXまたはGitHub, 本システム公開元のIssueからお願いいたします。それ以外からは回答いたしかねます。

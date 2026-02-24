@@ -16,7 +16,7 @@ using UnityEditor;
 /// 配置するオブジェクトの各自設定項目
 /// </summary>
 [System.Serializable]
-public class InstanceSetting
+internal class InstanceSetting
 {
     [InspectorName("Prefab")] public GameObject prefab;
     [InspectorName("Mesh Deform (β-Version)")] public bool MeshDeform = false;
@@ -30,7 +30,7 @@ public class InstanceSetting
 }
 
 [ExecuteInEditMode] //エディター上でも常時実行していることを忘れないこと
-public class SplineAdvanceInstantiate : MonoBehaviour
+internal class SplineAdvanceInstantiate : MonoBehaviour
 {
     /// <summary>
     /// 前方軸を指定
@@ -82,8 +82,6 @@ public class SplineAdvanceInstantiate : MonoBehaviour
     /// </summary>
     internal void InstanceObj()
     {
-        // オブジェクトの重複を防ぐため、いったんInstantiate済みのオブジェクトを削除
-        ClearInstanceObjects();
         if (splineContainer == null)
         {
             Debug.LogError("SplineContainer is null. Cannot instance objects.");
