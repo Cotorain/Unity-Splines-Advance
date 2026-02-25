@@ -27,8 +27,10 @@ Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された�
 - パッケージのバージョン情報などの変更履歴(Change Log)です。
 
 ## インストール方法
-このファイルをGitHubの`Code`→`Download ZIP`よりインストールし、解凍して`Assets`フォルダーもしくは`Packages`フォルダーに貼り付けてください。
-また、GitHubのURLから直接パッケージとしてインストールする場合は、Unityの`Package Manager`→`+▼`→`Add package from Git URL...`で出てきたテキスト入力欄に`https://github.com/Cotorain/Unity-Splines-Advance.git`と入力してください。
+3つの方法を掲載します。
+1. このファイルをGitHubの`Code`→`Download ZIP`よりインストールし、解凍して`Assets`フォルダーもしくは`Packages`フォルダーに貼り付けてください。
+2. GitHubのURLから直接パッケージとしてインストールする場合は、Unityの`Package Manager`→`+▼`→`Install package from Git URL...`で出てきたテキスト入力欄に`https://github.com/Cotorain/Unity-Splines-Advance.git`と入力してください。
+3. Unityの`Package Manager`→`+▼`→`Install package from local disk...`でダウンロードしたこのパッケージを選択してください。
 
 ## SplineAdvanceSystemのAPIについて
 ### `SplineAdvanceSystem.CalcSpline(SplineContainer spline, float distance, out Vector3 calcPos, out Vector3 calcRot)`

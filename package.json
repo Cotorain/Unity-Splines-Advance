@@ -2,8 +2,8 @@
   "name": "unity-splines-advance",
   "version": "1.2.2",
   "displayName": "Unity Splines Advance",
-  "description": "This is a package that extends the functionality of Unity Spine.\nIt includes an easy-to-use API, root management components, Spline measurement components, and components that allow flexible placement of objects along Splines.",
-  "unity": "6000.3.6f1",
+  "description": "This is a package that extends the functionality of Unity Spine.It includes an easy-to-use API, root management components, Spline measurement components, and components that allow flexible placement of objects along Splines.",
+  "unity": "6000.3",
   "splines": "2.8.2",
   "author": {
     "name": "Cotoráin",
