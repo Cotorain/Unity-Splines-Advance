@@ -39,9 +39,7 @@ public static class SplineAdvanceSystem
 
         float parameterT = distance / SplineLength;
 
-        // パラメーターが範囲外の場合、ループさせる
-        if (parameterT > 1f) parameterT = 0f;
-        else if (parameterT < 0f) parameterT = 1f;
+        // パラメーターtを0..1の範囲にクランプ
         parameterT = math.clamp(parameterT, 0f, 1f);
 
         float3 pos;

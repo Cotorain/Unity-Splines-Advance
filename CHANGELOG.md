@@ -1,5 +1,10 @@
 # Changelog
 
+## - 2026-02-25
+### Changed
+- `SplineAdvanceSystem.CalcSpline`での値のクランプするようにした
+- RouteManagerにて`Update()`処理で複数の呼び出しでも戻り値の更新ができるようにした
+
 ## - 2026-02-24
 ### Added
 - SplineGuideを追加しました。

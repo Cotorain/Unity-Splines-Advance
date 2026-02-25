@@ -55,13 +55,23 @@ public class RouteManager : MonoBehaviour
     void Update()
     {
         if (jointInfo.Count == 0) return;
-        // distanceに対応するSplineを探す
+        RefreshCalcResult(distance);
+    }
+
+    /// <summary>
+    /// 指定された距離に対応する位置と回転を計算して、calcPos と calcRot に格納します。
+    /// </summary>
+    /// <param name="queryDistance">計算対象の距離</param>
+    public void RefreshCalcResult(float queryDistance)
+    {
+        if (jointInfo.Count == 0) return;
+        // queryDistanceに対応するSplineを探す
         foreach (var info in jointInfo)
         {
-            if (distance >= info.cumulativeStart && distance <= info.cumulativeEnd)
+            if (queryDistance >= info.cumulativeStart && queryDistance <= info.cumulativeEnd)
             {
                 referenceSpline = info.Spline;
-                referenceDistance = info.start + (distance - info.cumulativeStart);
+                referenceDistance = info.start + (queryDistance - info.cumulativeStart);
                 break;
             }
         }

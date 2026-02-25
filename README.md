@@ -56,8 +56,7 @@ Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された�
 - `float distance`  
   Spline上の位置(`Knot[0]`からの距離)をUnity Unitで指定します。  
 ### 注意点
-- `float distance`の値が`SplineContainer spline`で設定されたSplineの長さよりも大きくなると、0にリセットされます。また、この値が0より小さくなると1に移動します。  
-これは、Splineの開閉問わずオブジェクトが起点や終点にとどまることを防ぐためです。
+- `float distance`の値が`SplineContainer spline`で設定されたSplineの長さをはみ出すと、クランプされます。閉スプラインの挙動を作成したい場合、`distance`を0に起点に戻すなどの処理はユーザーがスクリプトにて設定する必要があります。
 
 ----
 ### `SplineAdvanceSystem.GetOffsetOnSpline(SplineContainer spline, float distance, float offset, out Vector3 calcPos, out Vector3 calcRot)`
@@ -176,8 +175,7 @@ public RouteManager routeManager;
 
 2. 商用利用はMIT Licenseの通りですが、**商用利用する際や重要なプロジェクトに使用する場合は十分に検証をしてください**。
 
-3. `SplineAdvanceSystem.GetOffsetOnSpline`について再度注意しますが、**求められる位置はあくまで近似点であり、実際の正確な値を保証するわけではありません。**
-複雑な形のSplineでは、大きくずれることがあります**。
+3. `SplineAdvanceSystem.GetOffsetOnSpline`について再度注意しますが、**求められる位置はあくまで近似点であり、実際の正確な値を保証するわけではありません。複雑な形のSplineでは、大きくずれることがあります**。
 
 4. メッシュ変形機能(Mesh Deform)は実行すると、完了するまで何も操作できなくなるため、高ポリのオブジェクトなど負荷のかかるオブジェクトを複製する場合は十分注意してください。
 
