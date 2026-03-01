@@ -1,10 +1,10 @@
-# Unity Spline Advance v1.2.2
+# Unity Spline Advance v1.2.4
 ## 初めに - Unity Spline Advanceについて
 Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された、API及び拡張機能が同梱されたシステムです。Unity C#コードにおいて、ユーザーは、API（void）をスクリプトから使用することができます。
 
 ## 動作環境（確認済み）
 - Unity 6.3LTS(6000.3.1f1) 以降
-- Unity Splines 2.8.2 以降
+- Unity Splines 2.8.3 以降
 
 ## 添付ファイル（概要）
 ### SplinesSystem.cs
