@@ -4,10 +4,8 @@
     Mesh deformation functionality is currently under development.
 ----------------------------------------------------------------*/
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Splines;
-using Unity.Mathematics;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -19,7 +17,7 @@ using UnityEditor;
 internal class InstanceSetting
 {
     [InspectorName("Prefab")] public GameObject prefab;
-    [InspectorName("Mesh Deform (β-Version)")] public bool MeshDeform = false;
+    [InspectorName("Mesh Deform")] public bool MeshDeform = false;
     [InspectorName("Installation interval")] public float InstallationInterval = 1.0f;
     [InspectorName("Transform correction")] public Vector3 TransformCorrection = Vector3.zero;
     [InspectorName("Rotation correction (Euler)")] public Vector3 RotationCorrection = Vector3.zero;
@@ -58,24 +56,12 @@ internal class SplineAdvanceInstantiate : MonoBehaviour
             return;
         }
     }
-    /*
-      #########################################################
-      #  DANGER: MUST NOT INCREASE PROSESSINGS IN Update()!   #
-      #  OTHERWISE YOUR COMPUTER WILL SURELY DIE.             #
-      #########################################################
-    */
     private void Update()
     {
         // Spline長を常に最新に保つ
         if (splineContainer == null) return;
         splineLength = splineContainer.CalculateLength();
     }
-    /*
-      #########################################################
-      #  DANGER: MUST NOT INCREASE PROSESSINGS IN Update()!   #
-      #  OTHERWISE YOUR COMPUTER WILL SURELY DIE.             #
-      #########################################################
-    */
 
     /// <summary>
     /// Spline上にオブジェクトを配置。
@@ -131,7 +117,7 @@ internal class SplineAdvanceInstantiate : MonoBehaviour
 
                 // 'a' is a InstallationInterval along the spline in world units. Use InstallationInterval-based API.
                 float InstallationIntervalAlong = a;
-                SplineAdvanceSystem.CalcSpline(splineContainer, InstallationIntervalAlong, out Vector3 objPos, out Vector3 objRotEuler);// Calculate position and rotation (Euler angles)
+                SplinesSystem.CalcSpline(splineContainer, InstallationIntervalAlong, out Vector3 objPos, out Vector3 objRotEuler);// Calculate position and rotation (Euler angles)
 
                 // Convert Euler angles to Quaternion for instantiation
                 Quaternion objRot = Quaternion.Euler(objRotEuler);
@@ -287,7 +273,7 @@ internal class SplineAdvanceInstantiate : MonoBehaviour
             // System仕様（1超過→0）を回避
             sampleInstallationInterval = Mathf.Clamp(sampleInstallationInterval, 0f, splineLength);
 
-            SplineAdvanceSystem.CalcSpline(spline, sampleInstallationInterval, out Vector3 p, out Vector3 rEuler);
+            SplinesSystem.CalcSpline(spline, sampleInstallationInterval, out Vector3 p, out Vector3 rEuler);
 
             Quaternion r = Quaternion.Euler(rEuler);
 

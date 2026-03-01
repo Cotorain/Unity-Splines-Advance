@@ -80,7 +80,7 @@ public class RouteManager : MonoBehaviour
         if (referenceSpline != null)
         {
             Vector3 Pos, Rot;
-            SplineAdvanceSystem.CalcSpline(referenceSpline, referenceDistance, out Pos, out Rot);
+            SplinesSystem.CalcSpline(referenceSpline, referenceDistance, out Pos, out Rot);
             calcPos = Pos;
             calcRot = Rot;
         }

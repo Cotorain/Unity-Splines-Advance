@@ -9,7 +9,7 @@ using UnityEngine.Splines;
 using Unity.Mathematics;
 
 [Tooltip("This code is for APIs. You don't have to attach here.")] //The tooltip might not be necessary:(
-public static class SplineAdvanceSystem
+public static class SplinesSystem
 {
     /// <summary>
     /// distanceで指定したSplie上の位置を計算し、Transformの位置と回転を出力します。
@@ -20,52 +20,19 @@ public static class SplineAdvanceSystem
     /// <param name="calcRot">distanceで求めた地点の回転をVector3(Euler角)で返します。</param>
     public static void CalcSpline(SplineContainer spline, float distance, out Vector3 calcPos, out Vector3 calcRot)
     {
-        if (spline == null)
+        float length = spline ? spline.CalculateLength() : 0;
+        if (length <= 0)
         {
-            Debug.LogError("SplineContainer is null. Cannot calculate spline.");
-            calcPos = Vector3.zero;
-            calcRot = Vector3.zero;
-            return;
-        }
-        // distance をSpline長に対する割合 t (0..1) に変換して評価する
-        float SplineLength = spline.CalculateLength();
-        if (SplineLength <= 0f)
-        {
-            Debug.LogWarning("SplineAdvanceSystem.CalcSpline(): spline length is zero.");
-            calcPos = Vector3.zero;
-            calcRot = Vector3.zero;
+            Debug.LogError($"SplinesSystem.CalcSpline: {(spline == null ? "SplineContainer is null." : "Spline length is zero.")}");
+            calcPos = calcRot = Vector3.zero;
             return;
         }
 
-        float parameterT = distance / SplineLength;
-
-        // パラメーターtを0..1の範囲にクランプ
-        parameterT = math.clamp(parameterT, 0f, 1f);
-
-        float3 pos;
-        float3 tangent;
-        float3 up;
-
-        spline.Evaluate(parameterT, out pos, out tangent, out up);
+        spline.Evaluate(math.saturate(distance / length), out float3 pos, out float3 tan, out float3 up);
 
         calcPos = (Vector3)pos;
 
-        // tangentがゼロベクトルの場合は、デフォルト回転を使用
-        float tangentLength = math.length(tangent);
-        float upLength = math.length(up);
-
-        if (tangentLength < 0.0001f || upLength < 0.0001f)
-        {
-            // 接線またはup方向が無効な場合は、デフォルト回転を返す
-            calcRot = Vector3.zero; // または Quaternion.identity.eulerAngles
-        }
-        else
-        {
-            float3 normalizedTangent = tangent / tangentLength;
-            float3 normalizedUp = up / upLength;
-            Quaternion quat = Quaternion.LookRotation((Vector3)normalizedTangent, (Vector3)normalizedUp);
-            calcRot = quat.eulerAngles;
-        }
+        calcRot = math.any(tan) ? Quaternion.LookRotation((Vector3)tan, (Vector3)up).eulerAngles : Vector3.zero;
     }
 
     /// <summary>
@@ -76,9 +43,14 @@ public static class SplineAdvanceSystem
     /// <param name="distance">Spline上の位置をUnitで入力します</param>
     public static void SetObj(SplineContainer spline, GameObject targetObj, float distance)
     {
-        if (spline == null || targetObj == null)
+        if (!spline)
         {
-            Debug.LogError("Invalid argument. Cannot set object.");
+            Debug.LogError("SplinesSystem.SetObj(): spline is null.");
+            return;
+        }
+        if (!targetObj)
+        {
+            Debug.LogError("SplinesSystem.SetObj(): targetObj is null.");
             return;
         }
 
@@ -101,9 +73,9 @@ public static class SplineAdvanceSystem
     /// <param name="calcRot">近似点の回転をVector3(Euler角)で返します。</param>
     public static void GetOffsetOnSpline(SplineContainer spline, float distance, float offset, out Vector3 calcPos, out Vector3 calcRot)
     {
-        if (spline == null)
+        if (!spline)
         {
-            Debug.LogError("SplineContainer is null. Cannot calculate offset on spline.");
+            Debug.LogError("GetOffsetOnSpline(): spline is null.");
             calcPos = Vector3.zero;
             calcRot = Vector3.zero;
             return;
@@ -112,15 +84,10 @@ public static class SplineAdvanceSystem
         CalcSpline(spline, distance + offset, out Vector3 nearestPosOnSpline, out Vector3 nearestRotOnSpline);
 
         Vector3 nearestPointPos = nearestPosOnSpline - originPos;
-        // distance から offset 分だけ離れた点を近似点とする
-        if (nearestPointPos.magnitude > 0)
-        {
-            calcPos = originPos + nearestPointPos.normalized * Mathf.Abs(offset);
-        }
-        else
-        {
-            calcPos = originPos;
-        }
+
+        if (nearestPointPos.magnitude > 0) calcPos = originPos + nearestPointPos.normalized * Mathf.Abs(offset);
+        else calcPos = originPos;
+
         calcRot = nearestRotOnSpline;
     }
     /// <summary>
@@ -131,10 +98,9 @@ public static class SplineAdvanceSystem
     /// <param name="parmill">勾配を‰(パーミル)で返します。</param>
     public static void GetIncrineParmill(SplineContainer spline, float distance, out float parmill)
     {
-        if (spline == null)
+        if (!spline)
         {
-            Debug.LogError("SplineContainer is null. Cannot calculate offset on spline.");
-            distance = 0f;
+            Debug.LogError("SplinesSystem.GetIncrineParmill(): spline is null.");
             parmill = 0f;
             return;
         }

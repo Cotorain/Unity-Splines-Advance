@@ -7,7 +7,7 @@ Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された�
 - Unity Splines 2.8.2 以降
 
 ## 添付ファイル（概要）
-### SplineAdvanceSystem.cs
+### SplinesSystem.cs
 - APIが含まれた静的コードです。**インスペクター上に追加する必要はありません**。
 - メソッドは`public`で宣言されていますので、ユーザーはAPIをどこからでも使えます。
 ### SplineAdvanceInstantiate.cs
@@ -32,8 +32,8 @@ Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された�
 2. GitHubのURLから直接パッケージとしてインストールする場合は、Unityの`Package Manager`→`+▼`→`Install package from Git URL...`で出てきたテキスト入力欄に`https://github.com/Cotorain/Unity-Splines-Advance.git`と入力してください。
 3. Unityの`Package Manager`→`+▼`→`Install package from local disk...`でダウンロードしたこのパッケージを選択してください。
 
-## SplineAdvanceSystemのAPIについて
-### `SplineAdvanceSystem.CalcSpline(SplineContainer spline, float distance, out Vector3 calcPos, out Vector3 calcRot)`
+## SplinesSystemのAPIについて
+### `SplinesSystem.CalcSpline(SplineContainer spline, float distance, out Vector3 calcPos, out Vector3 calcRot)`
 - Splineの距離を指定すると、その地点の座標を返すAPIです。
 - `out`指定がある変数はこのメソッド以降の何処かの処理で使う必要があります。(Unity C#の仕様の為)
 ### 各値について
@@ -48,7 +48,7 @@ Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された�
 
 ----
 
-### `SplineAdvanceSystem.SetObj(SplineContainer spline, GameObject targetObj, float distance)`
+### `SplinesSystem.SetObj(SplineContainer spline, GameObject targetObj, float distance)`
 - Splineの距離を指定すると、Spline上に指定されたオブジェクトを配置するAPIです。
 ### 各値について
 - `SplineContainer spline`  
@@ -61,7 +61,7 @@ Unity Spline Advanceは、Unity Splinesを拡張する目的で作成された�
 - `float distance`の値が`SplineContainer spline`で設定されたSplineの長さをはみ出すと、クランプされます。閉スプラインの挙動を作成したい場合、`distance`を0に起点に戻すなどの処理はユーザーがスクリプトにて設定する必要があります。
 
 ----
-### `SplineAdvanceSystem.GetOffsetOnSpline(SplineContainer spline, float distance, float offset, out Vector3 calcPos, out Vector3 calcRot)`
+### `SplinesSystem.GetOffsetOnSpline(SplineContainer spline, float distance, float offset, out Vector3 calcPos, out Vector3 calcRot)`
 - Spline上の点から一定の距離、直線状に離れたspline上の点の近似点を返すAPIです。
 - 列車の台車の挙動などに利用できます。
 ### 各値について
@@ -177,7 +177,7 @@ public RouteManager routeManager;
 
 2. 商用利用はMIT Licenseの通りですが、**商用利用する際や重要なプロジェクトに使用する場合は十分に検証をしてください**。
 
-3. `SplineAdvanceSystem.GetOffsetOnSpline`について再度注意しますが、**求められる位置はあくまで近似点であり、実際の正確な値を保証するわけではありません。複雑な形のSplineでは、大きくずれることがあります**。
+3. `SplinesSystem.GetOffsetOnSpline`について再度注意しますが、**求められる位置はあくまで近似点であり、実際の正確な値を保証するわけではありません。複雑な形のSplineでは、大きくずれることがあります**。
 
 4. メッシュ変形機能(Mesh Deform)は実行すると、完了するまで何も操作できなくなるため、高ポリのオブジェクトなど負荷のかかるオブジェクトを複製する場合は十分注意してください。
 

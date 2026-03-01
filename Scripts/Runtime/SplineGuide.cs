@@ -21,7 +21,7 @@ public class SplineGuide : MonoBehaviour
         {
             SplineLength = spline.CalculateLength();
             distance = Mathf.Clamp(distance, 0f, SplineLength);
-            SplineAdvanceSystem.SetObj(spline, gameObject, distance);
+            SplinesSystem.SetObj(spline, gameObject, distance);
         }
         else
         {

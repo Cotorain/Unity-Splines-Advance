@@ -1,5 +1,10 @@
 # Changelog
 
+## - 2026-03-01
+### Changed
+- `SplineAdvanceSystem`の名称を`SplinesSystem`に変更
+- `SplinesSystem.CalcSpline`の計算方法を変更。微量ながら軽量化を施した。
+
 ## - 2026-02-25
 ### Changed
 - `SplineAdvanceSystem.CalcSpline`での値のクランプするようにした
